@@ -7,3 +7,11 @@
 #define MAX_CARGO 40
 #define ARCHIVO_EMPLEADOS "empleados.csv"
 #define VALOR_HORA_EXTRA 5.0f
+
+typedef struct {
+    char codigo_empleado[MAX_CODIGO];
+    char nombre[MAX_NOMBRE];
+    char cargo[MAX_CARGO];
+    float sueldo_base;
+    int horas_extra;
+} Empleado;
