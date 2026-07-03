@@ -17,4 +17,4 @@ static int tieneComa(const char *cadena) {
 static void copiarSeguro(char destino[], const char *origen, int tamano) {
     strncpy(destino, origen, tamano - 1);
     destino[tamano - 1] = '\0';
-}
+
