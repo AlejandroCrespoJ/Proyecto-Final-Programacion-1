@@ -1,2 +1,2 @@
-#include <stdio.h>
-#include "empleados.h"
+#ifndef EMPLEADOS_H
+#define EMPLEADOS_H
