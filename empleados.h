@@ -37,3 +37,5 @@ void limpiarCadena(char cadena[]);
 int codigoValido(const char *codigo);
 int existeCodigo(const Empleado empleados[], int cantidad, const char *codigo);
 int contieneTexto(const char *texto, const char *busqueda);
+
+#endif
