@@ -40,3 +40,26 @@ static void leerCadenaOpcional(const char *mensaje, char destino[], int tamano) 
         }
     } while (textoLargo);
 }
+
+static int leerFloatOpcional(const char *mensaje, float minimo, float *valor) {
+    char linea[80];
+    char *fin;
+    float temporal;
+
+    while (1) {
+        leerCadenaOpcional(mensaje, linea, sizeof(linea));
+
+        if (strlen(linea) == 0) {
+            return 0;
+        }
+
+        temporal = strtof(linea, &fin);
+
+        if (*fin == '\0' && temporal >= minimo) {
+            *valor = temporal;
+            return 1;
+        }
+
+        printf("Valor invalido. Debe ser un numero mayor o igual a %.2f.\n", minimo);
+    }
+}
