@@ -85,4 +85,52 @@ static int leerEnteroOpcional(const char *mensaje, int minimo, int *valor) {
 
         printf("Valor invalido. Debe ser un numero entero mayor o igual a %d.\n", minimo);
     }
+}static void imprimirCabeceraTabla(void) {
+    printf("%-15s %-25s %-20s %12s %12s %12s\n",
+           "CODIGO", "NOMBRE", "CARGO", "BASE", "H. EXTRA", "TOTAL");
+    printf("\n");
+}
+
+static void imprimirEmpleadoTabla(const Empleado *empleado) {
+    printf("%-15s %-25s %-20s %12.2f %12d %12.2f\n",
+           empleado->codigo_empleado,
+           empleado->nombre,
+           empleado->cargo,
+           empleado->sueldo_base,
+           empleado->horas_extra,
+           calcularSueldoTotal(empleado));
+}
+
+void limpiarCadena(char cadena[]) {
+    int inicio = 0;
+    int i;
+    size_t longitud;
+
+    longitud = strlen(cadena);
+
+    while (longitud > 0 && isspace((unsigned char)cadena[longitud - 1])) {
+        cadena[longitud - 1] = '\0';
+        longitud--;
+    }
+
+    while (cadena[inicio] != '\0' && isspace((unsigned char)cadena[inicio])) {
+        inicio++;
+    }
+
+    if (inicio > 0) {
+        for (i = 0; cadena[inicio + i] != '\0'; i++) {
+            cadena[i] = cadena[inicio + i];
+        }
+        cadena[i] = '\0';
+    }
+}
+
+void leerCadena(const char *mensaje, char destino[], int tamano) {
+    do {
+        leerCadenaOpcional(mensaje, destino, tamano);
+
+        if (strlen(destino) == 0) {
+            printf("Este campo no puede estar vacio.\n");
+        }
+    } while (strlen(destino) == 0);
 }
