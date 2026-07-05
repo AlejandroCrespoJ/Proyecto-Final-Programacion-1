@@ -63,3 +63,26 @@ static int leerFloatOpcional(const char *mensaje, float minimo, float *valor) {
         printf("Valor invalido. Debe ser un numero mayor o igual a %.2f.\n", minimo);
     }
 }
+
+static int leerEnteroOpcional(const char *mensaje, int minimo, int *valor) {
+    char linea[80];
+    char *fin;
+    long temporal;
+
+    while (1) {
+        leerCadenaOpcional(mensaje, linea, sizeof(linea));
+
+        if (strlen(linea) == 0) {
+            return 0;
+        }
+
+        temporal = strtol(linea, &fin, 10);
+
+        if (*fin == '\0' && temporal >= minimo) {
+            *valor = (int)temporal;
+            return 1;
+        }
+
+        printf("Valor invalido. Debe ser un numero entero mayor o igual a %d.\n", minimo);
+    }
+}
