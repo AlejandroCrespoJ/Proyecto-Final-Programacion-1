@@ -168,7 +168,7 @@ float leerFloat(const char *mensaje, float minimo) {
     }
 }
 
-nt codigoValido(const char *codigo) {
+int codigoValido(const char *codigo) {
     int i;
     int longitud = (int)strlen(codigo);
 
@@ -374,7 +374,7 @@ void registrarEmpleado(Empleado empleados[], int *cantidad) {
     printf("Empleado registrado correctamente. Sueldo total: %.2f\n", calcularSueldoTotal(&nuevo));
 }
 
-oid listarEmpleados(const Empleado empleados[], int cantidad) {
+void listarEmpleados(const Empleado empleados[], int cantidad) {
     int i;
 
     printf("\n--- LISTADO DE EMPLEADOS ---\n");
