@@ -225,7 +225,7 @@ float calcularSueldoTotal(const Empleado *empleado) {
 }
 
 void mostrarMenu(void) {
-    printf("\n========== SISTEMA DE GESTION DE EMPLEADOS ==========" "\n");
+    printf("\nSISTEMA DE GESTION DE EMPLEADOS" "\n");
     printf("1. Registrar empleado\n");
     printf("2. Listar empleados\n");
     printf("3. Buscar empleado\n");
@@ -233,7 +233,7 @@ void mostrarMenu(void) {
     printf("5. Eliminar empleado\n");
     printf("6. Guardar cambios en archivo\n");
     printf("0. Guardar y salir\n");
-    printf("=====================================================\n");
+    printf("\n");
 }
 
 int cargarEmpleados(Empleado empleados[], int *cantidad, const char *nombreArchivo) {
@@ -333,7 +333,7 @@ void registrarEmpleado(Empleado empleados[], int *cantidad) {
         return;
     }
 
-    printf("\n--- REGISTRAR EMPLEADO ---\n");
+    printf("\nREGISTRAR EMPLEADO\n");
 
     while (1) {
         leerCadena("Codigo de empleado: ", nuevo.codigo_empleado, MAX_CODIGO);
