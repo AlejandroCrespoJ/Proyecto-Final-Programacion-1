@@ -506,3 +506,42 @@ void actualizarEmpleado(Empleado empleados[], int cantidad) {
     imprimirCabeceraTabla();
     imprimirEmpleadoTabla(&empleados[indice]);
 }
+void eliminarEmpleado(Empleado empleados[], int *cantidad) {
+    char codigo[MAX_CODIGO];
+    char confirmacion[10];
+    int indice;
+    int i;
+
+    if (*cantidad == 0) {
+        printf("No existen empleados registrados.\n");
+        return;
+    }
+
+    printf("\n--- ELIMINAR EMPLEADO ---\n");
+    leerCadena("Codigo del empleado a eliminar: ", codigo, MAX_CODIGO);
+
+    indice = existeCodigo(empleados, *cantidad, codigo);
+
+    if (indice == -1) {
+        printf("No existe un empleado con ese codigo.\n");
+        return;
+    }
+
+    printf("Empleado encontrado:\n");
+    imprimirCabeceraTabla();
+    imprimirEmpleadoTabla(&empleados[indice]);
+
+    leerCadena("Confirma eliminacion? (S/N): ", confirmacion, sizeof(confirmacion));
+
+    if (tolower((unsigned char)confirmacion[0]) != 's') {
+        printf("Eliminacion cancelada.\n");
+        return;
+    }
+
+    for (i = indice; i < *cantidad - 1; i++) {
+        empleados[i] = empleados[i + 1];
+    }
+
+    (*cantidad)--;
+    printf("Empleado eliminado correctamente.\n");
+}
