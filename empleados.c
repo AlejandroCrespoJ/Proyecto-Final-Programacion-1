@@ -373,3 +373,136 @@ void registrarEmpleado(Empleado empleados[], int *cantidad) {
 
     printf("Empleado registrado correctamente. Sueldo total: %.2f\n", calcularSueldoTotal(&nuevo));
 }
+
+oid listarEmpleados(const Empleado empleados[], int cantidad) {
+    int i;
+
+    printf("\n--- LISTADO DE EMPLEADOS ---\n");
+
+    if (cantidad == 0) {
+        printf("No existen empleados registrados.\n");
+        return;
+    }
+
+    imprimirCabeceraTabla();
+
+    for (i = 0; i < cantidad; i++) {
+        imprimirEmpleadoTabla(&empleados[i]);
+    }
+}
+
+void buscarEmpleado(const Empleado empleados[], int cantidad) {
+    int opcion;
+    int i;
+    int encontrado = 0;
+    char busqueda[MAX_NOMBRE];
+
+    if (cantidad == 0) {
+        printf("No existen empleados registrados.\n");
+        return;
+    }
+
+    printf("\n--- BUSCAR EMPLEADO ---\n");
+    printf("1. Buscar por codigo exacto\n");
+    printf("2. Buscar por nombre\n");
+
+    do {
+        opcion = leerEntero("Seleccione una opcion: ", 1);
+        if (opcion > 2) {
+            printf("Opcion invalida.\n");
+        }
+    } while (opcion > 2);
+
+    if (opcion == 1) {
+        leerCadena("Codigo a buscar: ", busqueda, MAX_CODIGO);
+
+        for (i = 0; i < cantidad; i++) {
+            if (strcmp(empleados[i].codigo_empleado, busqueda) == 0) {
+                imprimirCabeceraTabla();
+                imprimirEmpleadoTabla(&empleados[i]);
+                encontrado = 1;
+                break;
+            }
+        }
+    } else {
+        leerCadena("Texto del nombre a buscar: ", busqueda, MAX_NOMBRE);
+
+        imprimirCabeceraTabla();
+
+        for (i = 0; i < cantidad; i++) {
+            if (contieneTexto(empleados[i].nombre, busqueda)) {
+                imprimirEmpleadoTabla(&empleados[i]);
+                encontrado = 1;
+            }
+        }
+    }
+
+    if (!encontrado) {
+        printf("No se encontraron empleados con ese criterio.\n");
+    }
+}
+
+void actualizarEmpleado(Empleado empleados[], int cantidad) {
+    char codigo[MAX_CODIGO];
+    char nuevoTexto[MAX_NOMBRE];
+    int indice;
+    float nuevoSueldo;
+    int nuevasHoras;
+
+    if (cantidad == 0) {
+        printf("No existen empleados registrados.\n");
+        return;
+    }
+
+    printf("\n--- ACTUALIZAR EMPLEADO ---\n");
+    leerCadena("Codigo del empleado a actualizar: ", codigo, MAX_CODIGO);
+
+    indice = existeCodigo(empleados, cantidad, codigo);
+
+    if (indice == -1) {
+        printf("No existe un empleado con ese codigo.\n");
+        return;
+    }
+
+    printf("Empleado actual:\n");
+    imprimirCabeceraTabla();
+    imprimirEmpleadoTabla(&empleados[indice]);
+
+    while (1) {
+        leerCadenaOpcional("Nuevo nombre (ENTER para mantener): ", nuevoTexto, MAX_NOMBRE);
+        if (strlen(nuevoTexto) == 0) {
+            break;
+        }
+        if (tieneComa(nuevoTexto)) {
+            printf("El nombre no puede contener comas.\n");
+        } else {
+            copiarSeguro(empleados[indice].nombre, nuevoTexto, MAX_NOMBRE);
+            break;
+        }
+    }
+
+    while (1) {
+        leerCadenaOpcional("Nuevo cargo (ENTER para mantener): ", nuevoTexto, MAX_CARGO);
+        if (strlen(nuevoTexto) == 0) {
+            break;
+        }
+        if (tieneComa(nuevoTexto)) {
+            printf("El cargo no puede contener comas.\n");
+        } else {
+            copiarSeguro(empleados[indice].cargo, nuevoTexto, MAX_CARGO);
+            break;
+        }
+    }
+
+    if (leerFloatOpcional("Nuevo sueldo base (ENTER para mantener): ", 0.01f, &nuevoSueldo)) {
+        empleados[indice].sueldo_base = nuevoSueldo;
+    }
+
+    if (leerEnteroOpcional("Nuevas horas extra (ENTER para mantener): ", 0, &nuevasHoras)) {
+        empleados[indice].horas_extra = nuevasHoras;
+    }
+
+    printf("Empleado actualizado correctamente.\n");
+    imprimirCabeceraTabla();
+    imprimirEmpleadoTabla(&empleados[indice]);
+}
