@@ -167,3 +167,56 @@ float leerFloat(const char *mensaje, float minimo) {
         printf("Entrada invalida. Ingrese un numero mayor o igual a %.2f.\n", minimo);
     }
 }
+
+nt codigoValido(const char *codigo) {
+    int i;
+    int longitud = (int)strlen(codigo);
+
+    if (longitud < 1 || longitud > 15) {
+        return 0;
+    }
+
+    for (i = 0; codigo[i] != '\0'; i++) {
+        if (!isalnum((unsigned char)codigo[i])) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+int existeCodigo(const Empleado empleados[], int cantidad, const char *codigo) {
+    int i;
+
+    for (i = 0; i < cantidad; i++) {
+        if (strcmp(empleados[i].codigo_empleado, codigo) == 0) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+int contieneTexto(const char *texto, const char *busqueda) {
+    int i, j;
+    int longitudTexto = (int)strlen(texto);
+    int longitudBusqueda = (int)strlen(busqueda);
+
+    if (longitudBusqueda == 0) {
+        return 1;
+    }
+
+    for (i = 0; i <= longitudTexto - longitudBusqueda; i++) {
+        for (j = 0; j < longitudBusqueda; j++) {
+            if (tolower((unsigned char)texto[i + j]) != tolower((unsigned char)busqueda[j])) {
+                break;
+            }
+        }
+
+        if (j == longitudBusqueda) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
