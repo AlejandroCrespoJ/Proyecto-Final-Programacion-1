@@ -14,6 +14,5 @@ La informacion se carga y guarda en un archivo CSV llamado `empleados.csv`.
 
 COMANDO PARA CORRER EL PROGRAMA EN LA TERMINAL:
 
-gcc -Wall -Wextra -std=c11 main.c empleados.c -o empleados
-./empleados
+gcc -Wall -Wextra -std=c11 main.c empleados.c -o programa && ./programa
 
