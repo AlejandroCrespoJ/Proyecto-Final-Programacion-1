@@ -220,3 +220,156 @@ int contieneTexto(const char *texto, const char *busqueda) {
 
     return 0;
 }
+float calcularSueldoTotal(const Empleado *empleado) {
+    return empleado->sueldo_base + (empleado->horas_extra * VALOR_HORA_EXTRA);
+}
+
+void mostrarMenu(void) {
+    printf("\n========== SISTEMA DE GESTION DE EMPLEADOS ==========" "\n");
+    printf("1. Registrar empleado\n");
+    printf("2. Listar empleados\n");
+    printf("3. Buscar empleado\n");
+    printf("4. Actualizar empleado\n");
+    printf("5. Eliminar empleado\n");
+    printf("6. Guardar cambios en archivo\n");
+    printf("0. Guardar y salir\n");
+    printf("=====================================================\n");
+}
+
+int cargarEmpleados(Empleado empleados[], int *cantidad, const char *nombreArchivo) {
+    FILE *archivo;
+    char linea[300];
+    char *codigo;
+    char *nombre;
+    char *cargo;
+    char *sueldo;
+    char *horas;
+    Empleado temporal;
+
+    archivo = fopen(nombreArchivo, "r");
+
+    if (archivo == NULL) {
+        *cantidad = 0;
+        return 0;
+    }
+
+    *cantidad = 0;
+
+    fgets(linea, sizeof(linea), archivo);
+
+    while (fgets(linea, sizeof(linea), archivo) != NULL && *cantidad < MAX_EMPLEADOS) {
+        limpiarCadena(linea);
+
+        if (strlen(linea) == 0) {
+            continue;
+        }
+
+        codigo = strtok(linea, ",");
+        nombre = strtok(NULL, ",");
+        cargo = strtok(NULL, ",");
+        sueldo = strtok(NULL, ",");
+        horas = strtok(NULL, ",");
+
+        if (codigo == NULL || nombre == NULL || cargo == NULL || sueldo == NULL || horas == NULL) {
+            continue;
+        }
+
+        limpiarCadena(codigo);
+        limpiarCadena(nombre);
+        limpiarCadena(cargo);
+        limpiarCadena(sueldo);
+        limpiarCadena(horas);
+
+        copiarSeguro(temporal.codigo_empleado, codigo, MAX_CODIGO);
+        copiarSeguro(temporal.nombre, nombre, MAX_NOMBRE);
+        copiarSeguro(temporal.cargo, cargo, MAX_CARGO);
+        temporal.sueldo_base = (float)atof(sueldo);
+        temporal.horas_extra = atoi(horas);
+
+        if (codigoValido(temporal.codigo_empleado) &&
+            temporal.sueldo_base > 0 &&
+            temporal.horas_extra >= 0 &&
+            existeCodigo(empleados, *cantidad, temporal.codigo_empleado) == -1) {
+            empleados[*cantidad] = temporal;
+            (*cantidad)++;
+        }
+    }
+
+    fclose(archivo);
+    return 1;
+}
+
+int guardarEmpleados(const Empleado empleados[], int cantidad, const char *nombreArchivo) {
+    FILE *archivo;
+    int i;
+
+    archivo = fopen(nombreArchivo, "w");
+
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo para guardar.\n");
+        return 0;
+    }
+
+    fprintf(archivo, "codigo_empleado,nombre,cargo,sueldo_base,horas_extra\n");
+
+    for (i = 0; i < cantidad; i++) {
+        fprintf(archivo, "%s,%s,%s,%.2f,%d\n",
+                empleados[i].codigo_empleado,
+                empleados[i].nombre,
+                empleados[i].cargo,
+                empleados[i].sueldo_base,
+                empleados[i].horas_extra);
+    }
+
+    fclose(archivo);
+    return 1;
+}
+
+void registrarEmpleado(Empleado empleados[], int *cantidad) {
+    Empleado nuevo;
+
+    if (*cantidad >= MAX_EMPLEADOS) {
+        printf("No se pueden registrar mas empleados. Capacidad maxima: %d.\n", MAX_EMPLEADOS);
+        return;
+    }
+
+    printf("\n--- REGISTRAR EMPLEADO ---\n");
+
+    while (1) {
+        leerCadena("Codigo de empleado: ", nuevo.codigo_empleado, MAX_CODIGO);
+
+        if (!codigoValido(nuevo.codigo_empleado)) {
+            printf("Codigo invalido. Use 1 a 15 caracteres alfanumericos, sin espacios.\n");
+        } else if (existeCodigo(empleados, *cantidad, nuevo.codigo_empleado) != -1) {
+            printf("Ese codigo ya existe. Ingrese un codigo diferente.\n");
+        } else {
+            break;
+        }
+    }
+
+    while (1) {
+        leerCadena("Nombre: ", nuevo.nombre, MAX_NOMBRE);
+        if (tieneComa(nuevo.nombre)) {
+            printf("El nombre no puede contener comas porque se guarda en CSV.\n");
+        } else {
+            break;
+        }
+    }
+
+    while (1) {
+        leerCadena("Cargo: ", nuevo.cargo, MAX_CARGO);
+        if (tieneComa(nuevo.cargo)) {
+            printf("El cargo no puede contener comas porque se guarda en CSV.\n");
+        } else {
+            break;
+        }
+    }
+
+    nuevo.sueldo_base = leerFloat("Sueldo base: ", 0.01f);
+    nuevo.horas_extra = leerEntero("Horas extra: ", 0);
+
+    empleados[*cantidad] = nuevo;
+    (*cantidad)++;
+
+    printf("Empleado registrado correctamente. Sueldo total: %.2f\n", calcularSueldoTotal(&nuevo));
+}
