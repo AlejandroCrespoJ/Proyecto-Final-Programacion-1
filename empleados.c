@@ -134,3 +134,36 @@ void leerCadena(const char *mensaje, char destino[], int tamano) {
         }
     } while (strlen(destino) == 0);
 }
+int leerEntero(const char *mensaje, int minimo) {
+    char linea[80];
+    char *fin;
+    long valor;
+
+    while (1) {
+        leerCadena(mensaje, linea, sizeof(linea));
+        valor = strtol(linea, &fin, 10);
+
+        if (*fin == '\0' && valor >= minimo) {
+            return (int)valor;
+        }
+
+        printf("Entrada invalida. Ingrese un entero mayor o igual a %d.\n", minimo);
+    }
+}
+
+float leerFloat(const char *mensaje, float minimo) {
+    char linea[80];
+    char *fin;
+    float valor;
+
+    while (1) {
+        leerCadena(mensaje, linea, sizeof(linea));
+        valor = strtof(linea, &fin);
+
+        if (*fin == '\0' && valor >= minimo) {
+            return valor;
+        }
+
+        printf("Entrada invalida. Ingrese un numero mayor o igual a %.2f.\n", minimo);
+    }
+}
